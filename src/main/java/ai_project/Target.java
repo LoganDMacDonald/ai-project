@@ -1,27 +1,8 @@
 package ai_project;
 
-public class Target {
+public class Target extends Entity {
 
-    int ownerID, x, y;
-
-    public Target(Agent a, int i) {
-        ownerID = a.getID();
-        x = (int) (Math.random() * 1000);
-        y = (int) (Math.random() * 1000);
-
+    public Target(final int owner, final int x, final int y) {
+        super(owner, x, y);
     }
-
-    public int getID() {
-        return this.ownerID;
-    }
-
-    public int getLocationx() {
-        return this.x;
-    }
-
-    public int getLocationy() {
-        return this.y;
-    }
-
-
 }

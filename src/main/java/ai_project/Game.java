@@ -1,11 +1,12 @@
 package ai_project;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 //GAME MASTER
 // first targetcount to hit 0 is the winner
 
-public class GM {
+public class Game {
 
     public static boolean gameover = false;
     public static ArrayList<Agent> agents = new ArrayList();
@@ -17,21 +18,22 @@ public class GM {
 
         boolean gameOver = false;
         int turnNum = 1;
+        int width = 1000;
+        int height = 1000;
 
         System.out.println("initializing objects");
         // Initialize all Class objects
         for (int i = 0; i < 5; i++) {
-            Agent a = new Agent(i); // 5 agents are made
+            Agent a = randomAgent(i, width, height); // 5 agents are made
             agents.add(a);
-            System.out.println("agent " + i + "'s starting location is : " + a.getLocationx() + "," + a.getLocationy());
+            System.out.println("agent " + i + "'s starting location is : " + a.getX() + "," + a.getY());
             System.out.println("");
             for (int j = 0; j < 5; j++) {
-                Target t = new Target(a, 5 * i + j);
+                Target t = randomTarget(i, width, height);
                 // 5 targets are made for each agent and each target is given a
                 // unique id
                 targets.add(t);
-                System.out.println(
-                        "target " + t.getID() + "'s location is : " + t.getLocationx() + "," + t.getLocationy());
+                System.out.println("target " + t.getID() + "'s location is : " + t.getX() + "," + t.getY());
                 System.out.println("and belongs to agent #" + a.id);
             }
             System.out.println("\n*****");
@@ -68,5 +70,12 @@ public class GM {
         return -1;
     }
 
+    private static Agent randomAgent(int id, int gameWidth, int gameHeight) {
+        return new Agent(id, (int) (Math.random() * gameWidth), (int) (Math.random() * gameHeight));
+    }
+
+    private static Target randomTarget(int id, int gameWidth, int gameHeight) {
+        return new Target(id, (int) (Math.random() * gameWidth), (int) (Math.random() * gameWidth));
+    }
 
 }

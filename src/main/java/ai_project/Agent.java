@@ -2,16 +2,14 @@ package ai_project;
 
 import java.util.ArrayList;
 
-public class Agent {
-    int id, x, y, targetCount = 5;
+public class Agent extends Entity {
+    int targetCount = 5;
     boolean[][] visited = new boolean[1000][1000];
-    ArrayList<int[][]> DMs = new ArrayList();
-    ArrayList<int[][]> locations = new ArrayList();
+    ArrayList<int[][]> DMs = new ArrayList<>();
+    ArrayList<int[][]> locations = new ArrayList<>();
 
-    public Agent(int id) {
-        this.id = id;
-        x = (int) (Math.random() * 1000);
-        y = (int) (Math.random() * 1000);
+    public Agent(int id, int x, int y) {
+        super(id, x, y);
 
         for (int i = 0; i < 1000; i++) {
             for (int j = 0; j < 1000; j++) {
@@ -21,20 +19,8 @@ public class Agent {
 
     }
 
-    public int getID() {
-        return this.id;
-    }
-
-    public int getLocationx() {
-        return this.x;
-    }
-
-    public int getLocationy() {
-        return this.y;
-    }
-
     public void sendDM(int id, int x, int y) {
-        Agent a = GM.agents.get(id);
+        Agent a = Game.agents.get(id);
         int[][] b = new int[1][1];
         b[0][0] = x;
         b[0][1] = y;
@@ -52,7 +38,7 @@ public class Agent {
     }
 
     public void run() {
-        System.out.println("agent " + this.id + " location is " + this.x + " " + this.y);
+        System.out.println("agent " + id + " location is " + x + " " + y);
         // listen to direct messages
         // System.out.println("agent " + this.id + " reading DMs");
         readDMs();
@@ -96,7 +82,7 @@ public class Agent {
     }
 
     public void broadcast() {
-        GM.gameover = true;
+        Game.gameover = true;
 
     }
 
@@ -109,44 +95,45 @@ public class Agent {
     }
 
     public void pickupTarget(Target t) {
-        GM.targets.remove(t);// removes target from array list of targets
+        Game.targets.remove(t);// removes target from array list of targets
         System.out.println("agent " + this.id + " removed Target");
-        GM.gameover = true; // ENDS GAME TO SEE IF ANY TARGET IS PICKED UPs
+        Game.gameover = true; // ENDS GAME TO SEE IF ANY TARGET IS PICKED UPs
     }
 
     private void checkCircle(int startX, int startY) {
 
         for (int x1 = startX - 10; x1 <= startX + 10; x1++) {
-            for (int y1 = startY - 10; y1 <= startY + 10; y1++)
+            for (int y1 = startY - 10; y1 <= startY + 10; y1++) {
                 if (((x1 - startX) * (x1 - startX) + (y1 - startY) * (y1 - startY)) <= 10 && legalSpot(x1, y1)) {
                     visited[x1][y1] = true;
 
                     // may have to change to an iterator to compensate for
                     // deleting targets changing the size !!!
-                    for (int i = 0; i < GM.targets.size(); i++) {
-                        Target tar = GM.targets.get(i);
-                        int x = tar.getLocationx();
-                        int y = tar.getLocationy();
-                        if (x1 == x && y1 == y && tar.ownerID == id) { //if target is MINE, pick it up
+                    for (int i = 0; i < Game.targets.size(); i++) {
+                        Target tar = Game.targets.get(i);
+                        int x = tar.getX();
+                        int y = tar.getY();
+                        if (x1 == x && y1 == y && tar.getID() == id) { //if target is MINE, pick it up
                             pickupTarget(tar);
                             System.out.println("Agent " + this.id + " picked up target " + tar.getID());
-                        } else if (x1 == x && y1 == y && tar.ownerID != id) { // if target is anothers': tell them
+                        } else if (x1 == x && y1 == y && tar.getID() != id) { // if target is anothers': tell them
                             ///directMessage(tar.ownerID, tar.getLocationx(), tar.getLocationy());
                             System.out.println("Agent " + this.id + " picked up target " + tar.getID());
                         }
                     }
 
                     // check if any agents or targets lie in the circle;
-                    for (int i = 0; i < GM.agents.size(); i++) {
-                        Agent agent = GM.agents.get(i);
-                        int x = agent.getLocationx();
-                        int y = agent.getLocationy();
+                    for (int i = 0; i < Game.agents.size(); i++) {
+                        Agent agent = Game.agents.get(i);
+                        int x = agent.getX();
+                        int y = agent.getY();
                         if (x1 == x && y1 == y) {
                             avoid();
                         }
                     }
 
                 }
+            }
         }
     }
 
@@ -156,7 +143,7 @@ public class Agent {
         a[0][0] = locationx;
         a[0][1] = locationy;
 
-        Agent ag = GM.agents.get(ownerID);
+        Agent ag = Game.agents.get(ownerID);
         ag.DMs.add(a);
     }
 
