@@ -43,7 +43,7 @@ public class GameView extends JPanel {
             g2d.setColor(Color.RED);
             g2d.fillOval(x, y, 5, 5);
             g2d.setColor(Color.BLACK);
-            g2d.drawOval(x - radarRange / 2, y - radarRange / 2, radarRange, radarRange);
+            g2d.drawOval(x - radarRange, y - radarRange, 2 * radarRange, 2 * radarRange);
         }
 
         g2d.setColor(Color.GREEN);
