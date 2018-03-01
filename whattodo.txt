@@ -1,0 +1,5 @@
+//Algorithm for shortest path (Travelling salesman)
+//Where you already searched
+//Objective queue to reach all of it's objectives the fastest
+//Avoidance algorithm, last thing we will do
+//Different scenarios: Collaborative first, Competitive and Campasionate
