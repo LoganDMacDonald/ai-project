@@ -45,8 +45,11 @@ public class Game {
                         countTargets(agent.getId()), agent.getId(), agentEntity.getX(), agentEntity.getY());
 
                 ctx.addInboundMessages(publicMessages);
-                ctx.addInboundMessages(privateMessages.stream()
-                        .filter(m -> m.getReceiver() == agent.getId()).collect(Collectors.toList()));
+
+                if (scenario != Scenario.COMPETITION) {
+                    ctx.addInboundMessages(privateMessages.stream()
+                            .filter(m -> m.getReceiver() == agent.getId()).collect(Collectors.toList()));
+                }
 
                 List<Message> sentMessages = ctx.getOutboundMessages();
                 pubOutboundMessages.addAll(sentMessages.stream().filter(m -> m.getReceiver() == -1).collect(Collectors.toList()));
