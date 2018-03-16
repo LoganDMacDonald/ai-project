@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 
 public class Game {
 
+    private LinkedList<Message> publicMessages = new LinkedList<>();
+    private LinkedList<Message> privateMessages = new LinkedList<>();
+
     private final GameModel model;
     private final Scenario scenario;
 
@@ -25,48 +28,48 @@ public class Game {
             }
         }
 
-        LinkedList<Message> publicMessages = new LinkedList<>();
-        LinkedList<Message> privateMessages = new LinkedList<>();
-
         int turns = 0;
         int winner;
         while ((winner = getWinner()) < 0) {
-            LinkedList<Message> pubOutboundMessages = new LinkedList<>();
-            LinkedList<Message> privOutboundMessages = new LinkedList<>();
-
-            for (Agent agent : agents) {
-                Entity agentEntity = getAgentEntity(agent.getId());
-                Objects.requireNonNull(agentEntity);
-
-                List<Entity> nearbyAgents = getNearbyAgents(agentEntity);
-                List<Entity> nearbyTargets = getNearbyTargets(agentEntity);
-
-                AgentContext ctx = new AgentContext(nearbyAgents, nearbyTargets, scenario,
-                        countTargets(agent.getId()), agent.getId(), agentEntity.getX(), agentEntity.getY());
-
-                ctx.addInboundMessages(publicMessages);
-
-                if (scenario != Scenario.COMPETITION) {
-                    ctx.addInboundMessages(privateMessages.stream()
-                            .filter(m -> m.getReceiver() == agent.getId()).collect(Collectors.toList()));
-                }
-
-                List<Message> sentMessages = ctx.getOutboundMessages();
-                pubOutboundMessages.addAll(sentMessages.stream().filter(m -> m.getReceiver() == -1).collect(Collectors.toList()));
-                privOutboundMessages.addAll(sentMessages.stream().filter(m -> m.getReceiver() > -1).collect(Collectors.toList()));
-
-                makeMove(agent.takeTurn(ctx), agentEntity);
-                collectTargets(nearbyTargets.stream()
-                        .filter(e -> e.getID() == agent.getId())
-                        .collect(Collectors.toList())
-                );
-            }
-
-            publicMessages = pubOutboundMessages;
-            privateMessages = privOutboundMessages;
+            takeTurn(agents);
             turns++;
         }
         System.err.println("Game Over, Turns taken: " + turns + ", winner = " + winner);
+    }
+
+    void takeTurn(List<Agent> agents) {
+        LinkedList<Message> pubOutboundMessages = new LinkedList<>();
+        LinkedList<Message> privOutboundMessages = new LinkedList<>();
+
+        for (Agent agent : agents) {
+            Entity agentEntity = getAgentEntity(agent.getId());
+            Objects.requireNonNull(agentEntity);
+
+            List<Entity> nearbyAgents = getNearbyAgents(agentEntity);
+            List<Entity> nearbyTargets = getNearbyTargets(agentEntity);
+
+            AgentContext ctx = new AgentContext(nearbyAgents, nearbyTargets, scenario,
+                    countTargets(agent.getId()), agent.getId(), agentEntity.getX(), agentEntity.getY());
+
+            ctx.addInboundMessages(publicMessages);
+
+            if (scenario != Scenario.COMPETITION) {
+                ctx.addInboundMessages(privateMessages.stream()
+                        .filter(m -> m.getReceiver() == agent.getId()).collect(Collectors.toList()));
+            }
+
+            List<Message> sentMessages = ctx.getOutboundMessages();
+            pubOutboundMessages.addAll(sentMessages.stream().filter(m -> m.getReceiver() == -1).collect(Collectors.toList()));
+            privOutboundMessages.addAll(sentMessages.stream().filter(m -> m.getReceiver() > -1).collect(Collectors.toList()));
+
+            makeMove(agent.takeTurn(ctx), agentEntity);
+            collectTargets(nearbyTargets.stream()
+                    .filter(e -> e.getID() == agent.getId())
+                    .collect(Collectors.toList())
+            );
+        }
+        publicMessages = pubOutboundMessages;
+        privateMessages = privOutboundMessages;
     }
 
     private void makeMove(Move move, Entity entity) {
