@@ -41,7 +41,7 @@ public class AgentContext {
     }
 
     public void sendMessage(final String message, final int receiver) {
-        outboundMessages.add(new Message(message, id, receiver));
+        outboundMessages.add(new Message(message, receiver, id));
     }
 
     public List<Message> getMessages() {

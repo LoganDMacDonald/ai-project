@@ -51,22 +51,24 @@ public class Game {
             AgentContext ctx = new AgentContext(nearbyAgents, nearbyTargets, scenario,
                     countTargets(agent.getId()), agent.getId(), agentEntity.getX(), agentEntity.getY());
 
-            ctx.addInboundMessages(publicMessages);
+            ctx.addInboundMessages(publicMessages.stream()
+                    .filter(m -> m.getSender() != agent.getId())
+                    .collect(Collectors.toList()));
 
             if (scenario != Scenario.COMPETITION) {
                 ctx.addInboundMessages(privateMessages.stream()
                         .filter(m -> m.getReceiver() == agent.getId()).collect(Collectors.toList()));
             }
 
+            makeMove(agent.takeTurn(ctx), agentEntity);
+
             List<Message> sentMessages = ctx.getOutboundMessages();
             pubOutboundMessages.addAll(sentMessages.stream().filter(m -> m.getReceiver() == -1).collect(Collectors.toList()));
             privOutboundMessages.addAll(sentMessages.stream().filter(m -> m.getReceiver() > -1).collect(Collectors.toList()));
 
-            makeMove(agent.takeTurn(ctx), agentEntity);
             collectTargets(nearbyTargets.stream()
                     .filter(e -> e.getID() == agent.getId())
-                    .collect(Collectors.toList())
-            );
+                    .collect(Collectors.toList()));
         }
         publicMessages = pubOutboundMessages;
         privateMessages = privOutboundMessages;
