@@ -1,10 +1,16 @@
 package aiproject;
 
-
 import aiproject.agent.CompetitiveAgent;
 import aiproject.game.*;
+import aiproject.utility.GameStatistics;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
 import javax.swing.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 
 public class Application {
@@ -15,7 +21,7 @@ public class Application {
     private static final int GAME_HEIGHT = 100;
     private static final int RADAR_RANGE = 10;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         JFrame frame = new JFrame("Game");
 
         LinkedList<Agent> competitiveAgents = new LinkedList<>();
@@ -36,6 +42,13 @@ public class Application {
         frame.setVisible(true);
 
         Game game = new Game(model, Scenario.COMPETITION);
-        game.start(competitiveAgents);
+
+        BufferedWriter bw = Files.newBufferedWriter(Paths.get("./G10_1.csv"));
+        CSVPrinter printer = new CSVPrinter(bw, CSVFormat.DEFAULT);
+        game.addEventListener(GameStatistics.getStatWriter(printer));
+
+        game.start(competitiveAgents, 0);
+
+        printer.close();
     }
 }

@@ -4,3 +4,4 @@ gen/
 target/
 *.jar
 *.bat
+*.csv

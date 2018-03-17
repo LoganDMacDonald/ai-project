@@ -20,7 +20,7 @@ public class Game {
         this.model = model;
     }
 
-    public void start(List<Agent> agents) {
+    public void start(List<Agent> agents, int delay) {
         model.clear();
         for (Agent agent : agents) {
             model.addAgent(randomEntity(agent.getId(), model.getWidth(), model.getHeight()));
@@ -39,6 +39,11 @@ public class Game {
             takeTurn(agents);
             listeners.forEach(listener -> listener.turnComplete(moveCount, collectionCount));
             turns++;
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         for (GameEventListener listener : listeners) {
