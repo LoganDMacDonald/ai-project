@@ -33,6 +33,9 @@ public class GameModel {
         }
     }
 
+    /**
+     * Removes all targets and agents from this model
+     */
     public void clear() {
         synchronized (targets) {
             synchronized (agents) {
@@ -42,10 +45,20 @@ public class GameModel {
         }
     }
 
+    /**
+     * Modification of this list must be synchronised
+     *
+     * @return The list of agent entities part of this game model
+     */
     public List<Entity> getAgents() {
         return agents;
     }
 
+    /**
+     * Modification of this list must be synchronised
+     *
+     * @return The list of target entities part of this game model
+     */
     public List<Entity> getTargets() {
         return targets;
     }

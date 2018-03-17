@@ -12,6 +12,11 @@ public class Message {
         this.from = from;
     }
 
+    /**
+     * Who should receive this message?
+     *
+     * @return -1 if the message is public otherwise the specific agent id of the receiver
+     */
     public int getReceiver() {
         return to;
     }
