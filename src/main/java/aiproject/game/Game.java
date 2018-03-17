@@ -27,6 +27,7 @@ public class Game {
             for (int i = 0; i < model.getTargetsPerAgent(); i++) {
                 model.addTarget(randomEntity(agent.getId(), model.getWidth(), model.getHeight()));
             }
+            agent.init(scenario, model.getWidth(), model.getHeight(), model.getRadarRange(), model.getTargetsPerAgent(), agents.size());
         }
         collectionCount.clear();
         moveCount.clear();
