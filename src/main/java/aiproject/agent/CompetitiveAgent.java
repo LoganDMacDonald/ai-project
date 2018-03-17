@@ -1,12 +1,11 @@
 package aiproject.agent;
 
-import aiproject.game.Agent;
 import aiproject.game.AgentContext;
 import aiproject.game.Move;
 
 import java.util.Random;
 
-public class CompetitiveAgent extends Agent {
+public class CompetitiveAgent extends AbstractAgent {
 
     private final Random r = new Random();
 
