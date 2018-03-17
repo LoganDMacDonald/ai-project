@@ -5,8 +5,8 @@ public class StatisticUtils {
     private double max = Long.MIN_VALUE;
     private double min = Long.MAX_VALUE;
     private double sumOfSquares = 0;
-    private double numValues = 0;
     private double sum = 0;
+    private int numValues = 0;
 
     public void add(double value) {
         sum += value;
@@ -44,7 +44,7 @@ public class StatisticUtils {
         return min;
     }
 
-    public double getNumValues() {
+    public int getNumValues() {
         return numValues;
     }
 }
