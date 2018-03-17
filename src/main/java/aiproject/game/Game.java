@@ -138,6 +138,10 @@ public class Game {
 
     private void collectTargets(List<Entity> targets) {
         synchronized (model.getTargets()) {
+            for (Entity target : targets) {
+                Integer count = collectionCount.getOrDefault(target.getID(), 0) + 1;
+                collectionCount.put(target.getID(), count);
+            }
             model.getTargets().removeAll(targets);
         }
     }
