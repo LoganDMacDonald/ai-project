@@ -31,6 +31,8 @@ public class Game {
         collectionCount.clear();
         moveCount.clear();
 
+        listeners.forEach(listener -> listener.gameStart(scenario));
+
         int turns = 0;
         int winner;
         while ((winner = getWinner()) < 0) {

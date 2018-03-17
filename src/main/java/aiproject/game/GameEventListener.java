@@ -19,4 +19,6 @@ public interface GameEventListener {
      * @param winner The Id of the winning agent, or Integer.MAX_VALUE in collaboration mode
      */
     void gameComplete(int turnCount, int winner);
+
+    void gameStart(Scenario scenario);
 }
