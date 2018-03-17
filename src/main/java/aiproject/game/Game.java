@@ -1,15 +1,16 @@
 package aiproject.game;
 
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Game {
 
+    private LinkedList<GameEventListener> listeners = new LinkedList<>();
     private LinkedList<Message> publicMessages = new LinkedList<>();
     private LinkedList<Message> privateMessages = new LinkedList<>();
+    private Map<Integer, Integer> collectionCount = new HashMap<>();
+    private Map<Integer, Integer> moveCount = new HashMap<>();
 
     private final GameModel model;
     private final Scenario scenario;
@@ -27,13 +28,21 @@ public class Game {
                 model.addTarget(randomEntity(agent.getId(), model.getWidth(), model.getHeight()));
             }
         }
+        collectionCount.clear();
+        moveCount.clear();
 
         int turns = 0;
         int winner;
         while ((winner = getWinner()) < 0) {
             takeTurn(agents);
+            listeners.forEach(listener -> listener.turnComplete(moveCount, collectionCount));
             turns++;
         }
+
+        for (GameEventListener listener : listeners) {
+            listener.gameComplete(turns, winner);
+        }
+
         System.err.println("Game Over, Turns taken: " + turns + ", winner = " + winner);
     }
 
@@ -94,6 +103,11 @@ public class Game {
         if (nx < 0 || ny < 0 || nx >= model.getWidth() || ny >= model.getHeight())
             return;
 
+        if (move != Move.NO_MOVE) {
+            Integer count = moveCount.getOrDefault(entity.getID(), 0) + 1;
+            moveCount.put(entity.getID(), count);
+        }
+
         entity.setX(nx);
         entity.setY(ny);
     }
@@ -130,6 +144,14 @@ public class Game {
 
     public GameModel getModel() {
         return model;
+    }
+
+    public void addEventListener(final GameEventListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeEventListener(final GameEventListener listener) {
+        listeners.remove(listener);
     }
 
     private Entity getAgentEntity(final int id) {
