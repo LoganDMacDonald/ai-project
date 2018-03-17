@@ -65,7 +65,7 @@ public class Game {
             List<Entity> nearbyAgents = getNearbyAgents(agentEntity);
             List<Entity> nearbyTargets = getNearbyTargets(agentEntity);
 
-            AgentContext ctx = new AgentContext(nearbyAgents, nearbyTargets, scenario,
+            AgentContext ctx = new AgentContext(nearbyAgents, nearbyTargets,
                     countTargets(agent.getId()), agent.getId(), agentEntity.getX(), agentEntity.getY());
 
             ctx.addInboundMessages(publicMessages.stream()

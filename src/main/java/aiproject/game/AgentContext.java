@@ -9,20 +9,17 @@ public class AgentContext {
     private final List<Entity> nearbyTargets;
     private final List<Message> inboundMessages;
     private final List<Message> outboundMessages;
-    private final Scenario scenario;
     private final int targetsCollected;
     private final int id;
     private final int x;
     private final int y;
 
-    AgentContext(List<Entity> nearbyAgents, List<Entity> nearbyTargets, Scenario scenario,
-                        int targetsCollected, int id, int x, int y) {
+    AgentContext(List<Entity> nearbyAgents, List<Entity> nearbyTargets, int targetsCollected, int id, int x, int y) {
         this.nearbyAgents = nearbyAgents;
         this.nearbyTargets = nearbyTargets;
         this.targetsCollected = targetsCollected;
         this.inboundMessages = new LinkedList<>();
         this.outboundMessages = new LinkedList<>();
-        this.scenario = scenario;
         this.id = id;
         this.x = x;
         this.y = y;
