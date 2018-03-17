@@ -2,13 +2,13 @@ package aiproject.utility;
 
 public class StatisticUtils {
 
-    private long max = Long.MIN_VALUE;
-    private long min = Long.MAX_VALUE;
-    private long sumOfSquares = 0;
-    private long numValues = 0;
-    private long sum = 0;
+    private double max = Long.MIN_VALUE;
+    private double min = Long.MAX_VALUE;
+    private double sumOfSquares = 0;
+    private double numValues = 0;
+    private double sum = 0;
 
-    public void add(long value) {
+    public void add(double value) {
         sum += value;
         sumOfSquares += value * value;
         numValues++;
@@ -25,26 +25,26 @@ public class StatisticUtils {
     public double getVariance() {
         if (numValues == 0)
             throw new ArithmeticException();
-        return (sumOfSquares - sum * sum / (double) numValues) / (numValues - 1);
+        return (sumOfSquares - sum * sum / numValues) / (numValues - 1);
     }
 
     public double getStandardDev() {
         return Math.sqrt(getVariance());
     }
 
-    public long getMax() {
+    public double getMax() {
         if (numValues == 0)
             throw new ArithmeticException();
         return max;
     }
 
-    public long getMin() {
+    public double getMin() {
         if (numValues == 0)
             throw new ArithmeticException();
         return min;
     }
 
-    public long getNumValues() {
+    public double getNumValues() {
         return numValues;
     }
 }
