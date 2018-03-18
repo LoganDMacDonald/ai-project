@@ -35,6 +35,7 @@ public class GameView extends JPanel {
 
         g2d.setColor(Color.BLACK);
         g2d.drawRect(0, 0, width, height);
+        g2d.setStroke(new BasicStroke(3));
 
         for (Entity entity : model.getAgents()) {
             int x = width * entity.getX() / model.getWidth();
@@ -43,6 +44,7 @@ public class GameView extends JPanel {
             g2d.setColor(Color.RED);
             g2d.fillOval(x, y, 5, 5);
             g2d.setColor(Color.BLACK);
+            g2d.drawString(String.valueOf(entity.getID()), x - 2, y - (radarRange / 3));
             g2d.drawOval(x - radarRange, y - radarRange, 2 * radarRange, 2 * radarRange);
         }
 
@@ -51,8 +53,8 @@ public class GameView extends JPanel {
             for (Entity entity : model.getTargets()) {
                 int x = width * entity.getX() / model.getWidth();
                 int y = width * entity.getY() / model.getHeight();
-
-                g2d.fillOval(x, y, 5, 5);
+                g2d.drawString(String.valueOf(entity.getID()), x - 3, y - 5);
+                g2d.fillOval(x - 3, y - 3, 6, 6);
             }
         }
     }
