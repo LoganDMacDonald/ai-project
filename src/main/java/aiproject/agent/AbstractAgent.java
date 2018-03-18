@@ -25,6 +25,24 @@ public abstract class AbstractAgent extends Agent {
         visited = new boolean[gameWidth][gameHeight];
     }
 
+    private void markVisited(int x, int y) {
+        markVisited(new Point(x, y));
+    }
+
+    protected void markVisited(Point point) {
+        if (point.x < 0 || point.y < 0 || point.x >= getGameWidth() || point.y >= getGameHeight())
+            return;
+        for (int x = point.x - getRadarRange(); x < point.x + getRadarRange(); x++) {
+            for (int y = point.y - getRadarRange(); y < point.y + getRadarRange(); y++) {
+                if (x < 0 || y < 0 || x >= getGameWidth() || y >= getGameHeight())
+                    continue;
+                if (point.distance(x, y) < getRadarRange()) {
+                    visited[x][y] = true;
+                }
+            }
+        }
+    }
+
     /**
      * Produces the next move towards the specified target position
      *
@@ -81,7 +99,7 @@ public abstract class AbstractAgent extends Agent {
      * near the start location
      *
      * @param start The starting point
-     * @param goal The goal point
+     * @param goal  The goal point
      * @return The heuristic cost estimate (never overestimated)
      */
     private double heuristic(Point start, Point goal) {
