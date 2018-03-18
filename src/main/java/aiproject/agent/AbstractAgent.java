@@ -25,7 +25,7 @@ public abstract class AbstractAgent extends Agent {
         visited = new boolean[gameWidth][gameHeight];
     }
 
-    private void markVisited(int x, int y) {
+    protected void markVisited(int x, int y) {
         markVisited(new Point(x, y));
     }
 
