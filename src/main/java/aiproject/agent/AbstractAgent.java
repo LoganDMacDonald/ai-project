@@ -51,7 +51,7 @@ public abstract class AbstractAgent extends Agent {
      * @return The next move towards the target
      */
     protected Move navigate(AgentContext ctx, Point target) {
-        if (ctx.getX() == target.x && ctx.getY() == target.y) {
+        if (target == null || ctx.getX() == target.x && ctx.getY() == target.y) {
             this.target = null;
             return Move.NO_MOVE;
         }
