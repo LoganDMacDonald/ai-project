@@ -46,7 +46,19 @@ public class CollaborativeAgent extends AbstractAgent {
         Point us = new Point(ctx.getX(), ctx.getY());
         if (target == null && !pointList.isEmpty()) {
             pointList.sort(Comparator.comparingDouble(a -> a.distance(us)));
-            target = pointList.getFirst();
+            for (Point point : pointList) {
+                double minDist = Double.POSITIVE_INFINITY;
+                for (Entity entity : ctx.getNearbyAgents()) {
+                    double d = point.distance(entity.getX(), entity.getY());
+                    if (d < minDist) {
+                        minDist = d;
+                    }
+                }
+                if (minDist < point.distance(us))
+                    continue;
+                target = point;
+                break;
+            }
         }
 
         Move move = navigate(ctx, target);
