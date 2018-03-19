@@ -20,14 +20,16 @@ public class Game {
         this.model = model;
     }
 
-    public void start(List<Agent> agents, int delay) {
-        model.clear();
-        for (Agent agent : agents) {
-            model.addAgent(randomEntity(agent.getId(), model.getWidth(), model.getHeight()));
-            for (int i = 0; i < model.getTargetsPerAgent(); i++) {
-                model.addTarget(randomEntity(agent.getId(), model.getWidth(), model.getHeight()));
+    public synchronized void start(List<Agent> agents, int delay) {
+        synchronized (model) {
+            model.clear();
+            for (Agent agent : agents) {
+                model.addAgent(randomEntity(agent.getId(), model.getWidth(), model.getHeight()));
+                for (int i = 0; i < model.getTargetsPerAgent(); i++) {
+                    model.addTarget(randomEntity(agent.getId(), model.getWidth(), model.getHeight()));
+                }
+                agent.init(scenario, model.getWidth(), model.getHeight(), model.getRadarRange(), model.getTargetsPerAgent(), agents.size());
             }
-            agent.init(scenario, model.getWidth(), model.getHeight(), model.getRadarRange(), model.getTargetsPerAgent(), agents.size());
         }
         collectionCount.clear();
         moveCount.clear();
@@ -37,7 +39,9 @@ public class Game {
         int turns = 0;
         int winner;
         while ((winner = getWinner()) < 0) {
-            takeTurn(agents);
+            synchronized (model) {
+                takeTurn(agents);
+            }
             listeners.forEach(listener -> listener.turnComplete(moveCount, collectionCount));
             turns++;
             try {
@@ -51,7 +55,7 @@ public class Game {
             listener.gameComplete(turns, winner);
         }
 
-        System.err.println("Game Over, Turns taken: " + turns + ", winner = " + winner);
+        //System.err.println("Game Over, Turns taken: " + turns + ", winner = " + winner);
     }
 
     void takeTurn(List<Agent> agents) {
@@ -122,7 +126,7 @@ public class Game {
 
     private List<Entity> getNearbyAgents(Entity agent) {
         List<Entity> agents = new LinkedList<>();
-        synchronized (model.getAgents()) {
+        synchronized (model) {
             for (Entity other : model.getAgents()) {
                 if (agent.distanceTo(other) <= model.getRadarRange() && agent.getID() != other.getID()) {
                     agents.add(other);
@@ -134,7 +138,7 @@ public class Game {
 
     private List<Entity> getNearbyTargets(Entity agent) {
         List<Entity> targets = new LinkedList<>();
-        synchronized (model.getTargets()) {
+        synchronized (model) {
             for (Entity target : model.getTargets()) {
                 if (agent.distanceTo(target) <= model.getRadarRange()) {
                     targets.add(target);
@@ -145,7 +149,7 @@ public class Game {
     }
 
     private void collectTargets(List<Entity> targets) {
-        synchronized (model.getTargets()) {
+        synchronized (model) {
             for (Entity target : targets) {
                 Integer count = collectionCount.getOrDefault(target.getID(), 0) + 1;
                 collectionCount.put(target.getID(), count);
@@ -167,37 +171,41 @@ public class Game {
     }
 
     private Entity getAgentEntity(final int id) {
-        for (Entity entity : model.getAgents()) {
-            if (entity.getID() == id)
-                return entity;
+        synchronized (model) {
+            for (Entity entity : model.getAgents()) {
+                if (entity.getID() == id)
+                    return entity;
+            }
         }
         return null;
     }
 
     private int countTargets(final int id) {
-        synchronized (model.getTargets()) {
+        synchronized (model) {
             return model.getTargets().stream().mapToInt(t -> t.getID() == id ? 1 : 0).sum();
         }
     }
 
     public int getWinner() {
-        switch (scenario) {
-            case COMPASSION:
-            case COMPETITION:
-                for (Entity entity : model.getAgents()) {
-                    if (countTargets(entity.getID()) == 0)
-                        return entity.getID();
-                }
-                break;
-            case COLLABORATION:
-                if (model.getTargets().size() == 0)
-                    return Integer.MAX_VALUE;
-                break;
+        synchronized (model) {
+            switch (scenario) {
+                case COMPASSION:
+                case COMPETITION:
+                    for (Entity entity : model.getAgents()) {
+                        if (countTargets(entity.getID()) == 0)
+                            return entity.getID();
+                    }
+                    break;
+                case COLLABORATION:
+                    if (model.getTargets().size() == 0)
+                        return Integer.MAX_VALUE;
+                    break;
+            }
         }
         return -1;
     }
 
     private static Entity randomEntity(final int id, final int width, final int height) {
-        return new Entity(id, (int) (width * Math.random()), (int) (height * Math.random()));
+        return new Entity(id, 5 + (int) ((width - 10) * Math.random()), 5 + (int) ((height - 10) * Math.random()));
     }
 }
