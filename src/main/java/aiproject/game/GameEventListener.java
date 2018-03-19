@@ -18,7 +18,7 @@ public interface GameEventListener {
      * @param turnCount The number of turns it took to complete the game
      * @param winner The Id of the winning agent, or Integer.MAX_VALUE in collaboration mode
      */
-    void gameComplete(int turnCount, int winner);
+    void gameComplete(Map<Integer, Integer> targetsCollected, int turnCount, int winner);
 
     void gameStart(Scenario scenario);
 }

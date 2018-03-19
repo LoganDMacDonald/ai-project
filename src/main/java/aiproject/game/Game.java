@@ -34,6 +34,9 @@ public class Game {
         collectionCount.clear();
         moveCount.clear();
 
+        agents.forEach(agent -> collectionCount.put(agent.getId(), 0));
+        agents.forEach(agent -> moveCount.put(agent.getId(), 0));
+
         listeners.forEach(listener -> listener.gameStart(scenario));
 
         int turns = 0;
@@ -52,10 +55,8 @@ public class Game {
         }
 
         for (GameEventListener listener : listeners) {
-            listener.gameComplete(turns, winner);
+            listener.gameComplete(collectionCount, turns, winner);
         }
-
-        //System.err.println("Game Over, Turns taken: " + turns + ", winner = " + winner);
     }
 
     void takeTurn(List<Agent> agents) {

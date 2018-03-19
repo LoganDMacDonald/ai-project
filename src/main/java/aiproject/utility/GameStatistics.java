@@ -14,10 +14,9 @@ public class GameStatistics {
     }
 
     private static class StatisticListener implements GameEventListener {
-
-        private StatisticUtils statUtils;
         private CSVPrinter printer;
         private int scenario = -1;
+        private int iterationNumber = 0;
 
         public StatisticListener(CSVPrinter printer) {
             this.printer = printer;
@@ -25,52 +24,39 @@ public class GameStatistics {
 
         @Override
         public void turnComplete(Map<Integer, Integer> steps, Map<Integer, Integer> targetsCollected) {
+        }
+
+        @Override
+        public void gameComplete(Map<Integer, Integer> targetsCollected, int turnCount, int winner) {
             try {
-                for (Integer agentId : steps.keySet()) {
-                    int collected = targetsCollected.getOrDefault(agentId, 0);
-                    int numSteps = steps.get(agentId);
-                    double happiness = collected / (double) (numSteps + 1);
-                    statUtils.add(happiness);
-                    double competitiveness = (happiness - statUtils.getMin()) / (statUtils.getMax() - statUtils.getMin());
-                    double stdDev = statUtils.getStandardDev();
+                StatisticUtils statisticUtils = new StatisticUtils();
+                targetsCollected.forEach((k, v) -> statisticUtils.add(v / (double) (turnCount + 1)));
 
-                    if (Double.isNaN(competitiveness))
-                        competitiveness = 0;
-                    if (Double.isNaN(stdDev))
-                        stdDev = 0;
-
+                for (Integer agent : targetsCollected.keySet()) {
+                    double happiness = targetsCollected.get(agent) / (double) (turnCount + 1);
                     printer.print(scenario);
-                    printer.print(statUtils.getNumValues());
-                    printer.print(agentId);
-                    printer.print(collected);
-                    printer.print(numSteps);
+                    printer.print(iterationNumber);
+                    printer.print(agent);
+                    printer.print(targetsCollected.get(agent));
+                    printer.print(turnCount);
                     printer.print(happiness);
-                    printer.print(statUtils.getMax());
-                    printer.print(statUtils.getMin());
-                    printer.print(statUtils.getMean());
-                    printer.print(stdDev);
-                    printer.print(competitiveness);
+                    printer.print(statisticUtils.getMax());
+                    printer.print(statisticUtils.getMin());
+                    printer.print(statisticUtils.getMean());
+                    printer.print(statisticUtils.getStandardDev());
+                    printer.print((happiness - statisticUtils.getMin()) /
+                            (statisticUtils.getMax() - statisticUtils.getMin()));
                     printer.printRecord();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        @Override
-        public void gameComplete(int turnCount, int winner) {
-            try {
-                printer.print(winner);
-                printer.printRecord();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            iterationNumber++;
         }
 
         @Override
         public void gameStart(Scenario scenario) {
             this.scenario = scenario.getNum();
-            statUtils = new StatisticUtils();
         }
     }
 }
