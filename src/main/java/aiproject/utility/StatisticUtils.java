@@ -2,11 +2,11 @@ package aiproject.utility;
 
 public class StatisticUtils {
 
-    private double max = Long.MIN_VALUE;
-    private double min = Long.MAX_VALUE;
-    private double sumOfSquares = 0;
-    private double sum = 0;
-    private int numValues = 0;
+    double max = Long.MIN_VALUE;
+    double min = Long.MAX_VALUE;
+    double sumOfSquares = 0;
+    double sum = 0;
+    int numValues = 0;
 
     public void add(double value) {
         sum += value;
