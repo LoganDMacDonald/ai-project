@@ -109,7 +109,7 @@ public class CollaborativeAgent extends AbstractAgent {
         for (Entity entity : ctx.getNearbyTargets()) {
             if (entity.getID() != getId() && !foundTargets.contains(entity)) {
                 foundTargets.add(entity);
-                sendTargetPositon(ctx, entity);
+                sendTargetPosition(ctx, entity);
             }
         }
     }
@@ -119,15 +119,15 @@ public class CollaborativeAgent extends AbstractAgent {
         ctx.sendMessage(message, -1);
     }
 
-    private void sendTargetPositon(AgentContext ctx, Entity target) {
-        final String message = "T" + getId() + ":" + target.getX() + ":" + target.getY();
-        ctx.sendMessage(message, target.getID());
+    private void sendTargetPosition(AgentContext ctx, Entity target) {
+        final String message = "T" + target.getID() + ":" + target.getX() + ":" + target.getY();
+        ctx.sendMessage(message, getScenario() == Scenario.COMPETITION ? -1 : target.getID());
     }
 
     private Point readTargetPosition(Message message) {
         String msg = message.getMessage();
         if (msg.startsWith("T")) {
-            return getEntity(msg.substring(1));
+            return getEntity(msg.substring(1), getId());
         }
         return null;
     }
@@ -142,12 +142,27 @@ public class CollaborativeAgent extends AbstractAgent {
 
     private Point getEntity(String msg) {
         try {
-            String[] info = msg.substring(1).split(":");
+            String[] info = msg.split(":");
             int x = Integer.parseInt(info[1]);
             int y = Integer.parseInt(info[2]);
             return new Point(x, y);
         } catch (NumberFormatException nfe) {
             System.err.println("Bad message format!");
+        }
+        return null;
+    }
+
+    private Point getEntity(String msg, int id) {
+        try {
+            String[] info = msg.split(":");
+            int eId = Integer.parseInt(info[0]);
+            int x = Integer.parseInt(info[1]);
+            int y = Integer.parseInt(info[2]);
+            if (eId == id)
+                return new Point(x, y);
+        } catch (NumberFormatException nfe) {
+            System.err.println("Bad message format!");
+            nfe.printStackTrace();
         }
         return null;
     }
