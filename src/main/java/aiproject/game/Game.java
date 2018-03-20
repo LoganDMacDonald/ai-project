@@ -71,7 +71,8 @@ public class Game {
             List<Entity> nearbyTargets = getNearbyTargets(agentEntity);
 
             AgentContext ctx = new AgentContext(nearbyAgents, nearbyTargets,
-                    countTargets(agent.getId()), agent.getId(), agentEntity.getX(), agentEntity.getY());
+                    model.getTargetsPerAgent() - countTargets(agent.getId()),
+                    agent.getId(), agentEntity.getX(), agentEntity.getY());
 
             ctx.addInboundMessages(publicMessages.stream()
                     .filter(m -> m.getSender() != agent.getId())
