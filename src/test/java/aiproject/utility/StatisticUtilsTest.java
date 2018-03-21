@@ -172,7 +172,7 @@ public class StatisticUtilsTest
         //Constructor
         StatisticUtils instance = new StatisticUtils();
 
-        assertEquals(0, 0, instance.getNumValues());
+        assertEquals(0, instance.getNumValues(), 0.01);
 
         instance.getMax();
     }
