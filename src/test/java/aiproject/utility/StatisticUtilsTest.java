@@ -34,12 +34,18 @@ public class StatisticUtilsTest
         //Call Method
         instance.add(2.0);
 
+        instance.getSum();
+        instance.getSumOfSquares();
+        instance.getNumValues();
+        instance.getMin();
+        instance.getMax();
+
         //Check Test Verification Points
-        assertEquals(2.0, 2.0, instance.sum);
-        assertEquals(4.0, 4.0, instance.sumOfSquares);
-        assertEquals(4.0, 4.0, instance.sumOfSquares);
-        assertEquals(1, 1, instance.numValues);
-        assertEquals(2.0, 2.0, instance.min);
+        assertEquals(2.0, instance.getSum(), 0.01);
+        assertEquals(4.0, instance.getSumOfSquares(), 0.01);
+        assertEquals(1, instance.getNumValues(), 0.01);
+        assertEquals(2.0, instance.getMin(), 0.01);
+        assertEquals(2.0, instance.getMax(), 0.01);
 
     }
 
@@ -54,18 +60,11 @@ public class StatisticUtilsTest
         //Constructor
         StatisticUtils instance = new StatisticUtils();
 
-        instance.sum = 0;
-        instance.numValues = 0;
-
         //Check Test Verification Points
-        assertEquals(0, 0, instance.numValues);
-        assertEquals(0, 0, instance.sum);
+        assertEquals(0, instance.getNumValues(), 0.01);
+        assertEquals(0, instance.getSum(), 0.01);
 
-        Object expResult = true;
-        Object result = instance.getMean();
-
-        //Check Return value
-        assertEquals(expResult, result);
+        instance.getMean();
     }
 
     /*
@@ -80,19 +79,18 @@ public class StatisticUtilsTest
         //Constructor
         StatisticUtils instance = new StatisticUtils();
 
-        instance.numValues = 2;
-        instance.sum = 6.0;
+        instance.add(2.0);
+        instance.add(4.0);
 
         //Check Test Verification Points
-        assertEquals(2, 2, instance.numValues);
-        assertEquals(6.0, 6.0, instance.sum);
+        assertEquals(2, instance.getNumValues(), 0.01);
+        assertEquals(6.0, instance.getSum(), 0.01);
 
-        //Get expected result and result
-        Object expResult = 3.0;
-        Object result = instance.getMean();
+        //Get expected result
+        double result = instance.getMean();
 
         //Check Return value
-        assertEquals(expResult, result);
+        assertEquals(3.0, result, 0.01);
     }
 
     /*
@@ -106,20 +104,12 @@ public class StatisticUtilsTest
         //Constructor
         StatisticUtils instance = new StatisticUtils();
 
-        instance.numValues = 0;
-        instance.sumOfSquares = 0;
-        instance.sum = 0;
-
         //Check Test Verification Points
-        assertEquals(0, 0, instance.numValues);
-        assertEquals(0, 0, instance.sum);
-        assertEquals(0, 0, instance.sumOfSquares);
+        assertEquals(0, instance.getNumValues(), 0.01);
+        assertEquals(0, instance.getSum(), 0.01);
+        assertEquals(0, instance.getSumOfSquares(), 0.01);
 
-        Object expResult = true;
-        Object result = instance.getVariance();
-
-        //Check Return value
-        assertEquals(expResult, result);
+        instance.getVariance();
     }
 
     /*
@@ -134,22 +124,16 @@ public class StatisticUtilsTest
         //Constructor
         StatisticUtils instance = new StatisticUtils();
 
-        instance.numValues = 2;
-        instance.sum = 6.0;
-        instance.sumOfSquares = 20.0;
+        instance.add(2.0);
+        instance.add(4.0);
 
         //Check Test Verification Points
-        assertEquals(2, 2, instance.numValues);
-        assertEquals(6.0, 6.0, instance.sum);
-        assertEquals(20.0, 20.0, instance.sumOfSquares);
+        assertEquals(2, instance.getNumValues(), 0.01);
+        assertEquals(6.0, instance.getSum(), 0.01);
+        assertEquals(20.0, instance.getSumOfSquares(), 0.01);
 
         //Get expected result and result
-        double expResult = 2.0;
-        double resultNeg = (double) (instance.getVariance() - 0.01);
-        double resultPos = (double) (instance.getVariance() + 0.01);
-
-        //Check Return value
-        equals(expResult > (resultNeg) && expResult < (resultPos));
+        assertEquals(2.0, instance.getVariance(), 0.01);
     }
 
     /*
@@ -163,20 +147,18 @@ public class StatisticUtilsTest
         //Constructor
         StatisticUtils instance = new StatisticUtils();
 
-        instance.numValues = 2;
-        instance.sum = 6.0;
-        instance.sumOfSquares = 20.0;
+        instance.add(2.0);
+        instance.add(4.0);
+
+        assertEquals(2, instance.getNumValues(), 0.01);
+        assertEquals(6.0, instance.getSum(), 0.01);
+        assertEquals(20.0, instance.getSumOfSquares(), 0.01);
 
         //Check Test Verification Points
-        assertEquals(2.0, 2.0, instance.getVariance());
-
-        //Get expected result and result
-        double expResult = 1.4;
-        double resultNeg = (double) (instance.getStandardDev() - 0.01);
-        double resultPos = (double) (instance.getStandardDev() + 0.01);
+        assertEquals(2.0, instance.getVariance(), 0.01);
 
         //Check Return value
-        equals(expResult > (resultNeg) && expResult < (resultPos));
+        assertEquals(1.41, instance.getStandardDev(), 0.01);
     }
 
     /*
@@ -190,13 +172,9 @@ public class StatisticUtilsTest
         //Constructor
         StatisticUtils instance = new StatisticUtils();
 
-        instance.numValues = 0;
+        assertEquals(0, 0, instance.getNumValues());
 
-        Object expResult = true;
-        Object result = instance.getMax();
-
-        //Check Return value
-        assertEquals(expResult, result);
+        instance.getMax();
     }
 
     /*
@@ -214,14 +192,10 @@ public class StatisticUtilsTest
         instance.add(4.0);
 
         //Check Test Verification Points
-        assertEquals(2, 2, instance.numValues);
-
-        //Get expected result and result
-        Object expResult = 4.0;
-        Object result = instance.getMax();
+        assertEquals(2, instance.getNumValues(), 0.01);
 
         //Check Return value
-        assertEquals(expResult, result);
+        assertEquals(4.0, instance.getMax(), 0.01);
     }
 
     /*
@@ -235,13 +209,9 @@ public class StatisticUtilsTest
         //Constructor
         StatisticUtils instance = new StatisticUtils();
 
-        instance.numValues = 0;
+        assertEquals(0, instance.getNumValues(), 0.01);
 
-        Object expResult = true;
-        Object result = instance.getMin();
-
-        //Check Return value
-        assertEquals(expResult, result);
+        instance.getMin();
     }
 
     /*
@@ -259,14 +229,11 @@ public class StatisticUtilsTest
         instance.add(4.0);
 
         //Check Test Verification Points
-        assertEquals(2, 2, instance.numValues);
-
-        //Get expected result and result
-        Object expResult = 2.0;
-        Object result = instance.getMin();
+        assertEquals(2, instance.getNumValues(), 0.01);
 
         //Check Return value
-        assertEquals(expResult, result);
+        assertEquals(2.0, instance.getMin(), 0.01);
+
     }
 
     /*
@@ -280,16 +247,9 @@ public class StatisticUtilsTest
         //Constructor
         StatisticUtils instance = new StatisticUtils();
 
-        instance.numValues = 1;
+        instance.add(1.0);
 
         //Check Test Verification Points
-        assertEquals(1, 1, instance.numValues);
-
-        //Get expected result and result
-        Object expResult = 1;
-        Object result = instance.getNumValues();
-
-        //Check Return value
-        assertEquals(expResult, result);
+        assertEquals(1, instance.getNumValues(), 0.01);
     }
 }
