@@ -1,5 +1,6 @@
 package aiproject;
 
+import aiproject.agent.CollaborativeAgent;
 import aiproject.agent.CompetitiveAgent;
 import aiproject.game.*;
 import aiproject.utility.GameStatistics;
@@ -21,13 +22,13 @@ public class Application {
     private static final int GAME_HEIGHT = 100;
     private static final int RADAR_RANGE = 10;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         JFrame frame = new JFrame("Game");
 
         LinkedList<Agent> competitiveAgents = new LinkedList<>();
 
         for (int i = 0; i < NUM_AGENTS; i++) {
-            competitiveAgents.add(new CompetitiveAgent(i));
+            competitiveAgents.add(new CollaborativeAgent(i));
         }
 
         GameModel model = new GameModel(GAME_WIDTH, GAME_HEIGHT, RADAR_RANGE, TARGETS_PER_AGENT);
@@ -43,12 +44,15 @@ public class Application {
 
         Game game = new Game(model, Scenario.COMPETITION);
 
-        BufferedWriter bw = Files.newBufferedWriter(Paths.get("./G10_1.csv"));
-        CSVPrinter printer = new CSVPrinter(bw, CSVFormat.DEFAULT);
-        game.addEventListener(GameStatistics.getStatWriter(printer));
+        //BufferedWriter bw = Files.newBufferedWriter(Paths.get("./G10_1.csv"));
+        //CSVPrinter printer = new CSVPrinter(bw, CSVFormat.DEFAULT);
+        //game.addEventListener(GameStatistics.getStatWriter(printer));
 
-        game.start(competitiveAgents, 0);
+        while (true) {
+            game.start(competitiveAgents, 15);
+            Thread.sleep(1000);
+        }
 
-        printer.close();
+        //printer.close();
     }
 }
