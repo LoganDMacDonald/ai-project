@@ -2,15 +2,48 @@ package aiproject.utility;
 
 import aiproject.game.GameEventListener;
 import aiproject.game.Scenario;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GameStatistics {
 
     public static StatisticListener getStatWriter(CSVPrinter printer) {
         return new StatisticListener(printer);
+    }
+
+    /**
+     * Calculates the mean happiness and competitiveness from the input file
+     * and saves the results
+     *
+     * @param parser  The csv input
+     * @param printer The csv output
+     * @throws IOException
+     */
+    public static void evalHappinessCompetitiveness(CSVParser parser, CSVPrinter printer) throws IOException {
+        Map<Integer, StatisticUtils> happinessMap = new HashMap<>();
+        Map<Integer, StatisticUtils> competitiveMap = new HashMap<>();
+
+        for (CSVRecord record : parser.getRecords()) {
+            int scenario = Integer.parseInt(record.get(0));
+            StatisticUtils hMap = happinessMap.getOrDefault(scenario, new StatisticUtils());
+            StatisticUtils cMap = competitiveMap.getOrDefault(scenario, new StatisticUtils());
+            hMap.add(Double.parseDouble(record.get(8)));
+            cMap.add(Double.parseDouble(record.get(10)));
+            happinessMap.put(scenario, hMap);
+            competitiveMap.put(scenario, cMap);
+        }
+
+        for (Integer scenario : happinessMap.keySet()) {
+            printer.print(scenario);
+            printer.print(happinessMap.get(scenario).getMean());
+            printer.print(competitiveMap.get(scenario).getMean());
+            printer.printRecord();
+        }
     }
 
     private static class StatisticListener implements GameEventListener {
