@@ -13,11 +13,15 @@ public class Game {
     private Map<Integer, Integer> moveCount = new HashMap<>();
 
     private final GameModel model;
-    private final Scenario scenario;
+    private Scenario scenario;
 
     public Game(final GameModel model, final Scenario scenario) {
         this.scenario = scenario;
         this.model = model;
+    }
+
+    public void setScenario(Scenario scenario) {
+        this.scenario = scenario;
     }
 
     public synchronized void start(List<Agent> agents, int delay) {
@@ -57,6 +61,8 @@ public class Game {
         for (GameEventListener listener : listeners) {
             listener.gameComplete(collectionCount, turns, winner);
         }
+
+        System.err.println("Game over, turns=" + turns);
     }
 
     void takeTurn(List<Agent> agents) {
