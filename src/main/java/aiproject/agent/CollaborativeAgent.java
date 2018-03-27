@@ -22,6 +22,12 @@ public class CollaborativeAgent extends AbstractAgent {
     @Override
     public void init(Scenario scenario, int gameWidth, int gameHeight, int radarRange, int numTargets, int numAgents) {
         super.init(scenario, gameWidth, gameHeight, radarRange, numTargets, numAgents);
+
+        pointList.clear();
+        ourTargets.clear();
+        foundTargets.clear();
+        target = null;
+
         for (int x = radarRange; x + radarRange <= gameWidth; x += radarRange) {
             for (int y = radarRange; y + radarRange <= gameHeight; y += radarRange) {
                 pointList.add(new Point(x, y));
