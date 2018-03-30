@@ -33,10 +33,13 @@ public class CollaborativeAgent extends AbstractAgent {
                 pointList.add(new Point(x, y));
             }
         }
-        pointList.add(new Point(0, 0));
-        pointList.add(new Point(gameWidth - 1, gameHeight - 1));
-        pointList.add(new Point(gameWidth - 1, 0));
-        pointList.add(new Point(0, gameHeight - 1));
+        int offset = (int) Math.sqrt(Math.pow(radarRange, 2) / 2.0);
+        // used to calculate how far into the corners that we need to go
+
+        pointList.add(new Point(offset, offset));
+        pointList.add(new Point(gameWidth - 1 - offset, gameHeight - 1 - offset));
+        pointList.add(new Point(gameWidth - 1 - offset, offset));
+        pointList.add(new Point(offset, gameHeight - 1 - offset));
     }
 
     @Override
