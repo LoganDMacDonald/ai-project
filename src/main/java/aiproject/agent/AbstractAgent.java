@@ -115,6 +115,8 @@ public abstract class AbstractAgent extends Agent {
             }
         }
         double result = mDist - (unvisitedCount / (Math.PI * getRadarRange() * getRadarRange()));
+        if (start.x % getRadarRange() == 0 || start.y % getRadarRange() == 0)
+            result -= 1;
         result = result - 0.000001 <= 0 ? 0 : result;
         return result;
     }
