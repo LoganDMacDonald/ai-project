@@ -14,4 +14,12 @@ public enum Scenario {
     public int getNum() {
         return num;
     }
+
+    public static Scenario valueOf(int scenario) {
+        for (Scenario sc : Scenario.values()) {
+            if (sc.num == scenario)
+                return sc;
+        }
+        return null;
+    }
 }
