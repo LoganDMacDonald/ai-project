@@ -11,6 +11,7 @@ public class GameModel {
     private final int targetsPerAgent;
     private final List<Entity> agents;
     private final List<Entity> targets;
+    private Scenario scenario = null;
 
     public GameModel(final int width, final int height, final int radarRange, final int targetsPerAgent) {
         this.agents = new ArrayList<>();
@@ -19,6 +20,14 @@ public class GameModel {
         this.height = height;
         this.radarRange = radarRange;
         this.targetsPerAgent = targetsPerAgent;
+    }
+
+    public void setScenario(Scenario scenario) {
+        this.scenario = scenario;
+    }
+
+    public Scenario getScenario() {
+        return scenario;
     }
 
     public void addAgent(Entity agent) {

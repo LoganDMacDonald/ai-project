@@ -30,6 +30,11 @@ public class GameView extends JPanel {
         g2d.setStroke(new BasicStroke(3));
 
         synchronized (model) {
+            g2d.setColor(Color.GREEN);
+            if (model.getScenario() != null) {
+                g2d.drawString("Scenario: " + model.getScenario().name(), 10, 15);
+            }
+
             for (Entity entity : model.getAgents()) {
                 int x = width * entity.getX() / model.getWidth();
                 int y = width * entity.getY() / model.getHeight();

@@ -34,6 +34,7 @@ public class Game {
                 }
                 agent.init(scenario, model.getWidth(), model.getHeight(), model.getRadarRange(), model.getTargetsPerAgent(), agents.size());
             }
+            model.setScenario(scenario);
         }
         collectionCount.clear();
         moveCount.clear();
@@ -62,7 +63,7 @@ public class Game {
             listener.gameComplete(collectionCount, turns, winner);
         }
 
-        //System.err.println("Game over, turns=" + turns);
+        System.err.println("Game over, turns=" + turns);
     }
 
     void takeTurn(List<Agent> agents) {
