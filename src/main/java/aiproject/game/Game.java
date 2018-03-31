@@ -62,7 +62,7 @@ public class Game {
             listener.gameComplete(collectionCount, turns, winner);
         }
 
-        System.err.println("Game over, turns=" + turns);
+        //System.err.println("Game over, turns=" + turns);
     }
 
     void takeTurn(List<Agent> agents) {
@@ -104,6 +104,9 @@ public class Game {
     }
 
     private void makeMove(Move move, Entity entity) {
+        if (move == null || entity == null)
+            return;
+
         int nx = entity.getX();
         int ny = entity.getY();
         switch (move) {
