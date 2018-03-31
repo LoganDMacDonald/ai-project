@@ -163,8 +163,7 @@ public abstract class AbstractAgent extends Agent {
             for (Point neighbor : getNeighbors(current)) {
                 if (closedSet.contains(neighbor))
                     continue;
-                if (!openSet.contains(neighbor))
-                    openSet.add(neighbor);
+                openSet.add(neighbor);
                 double score = gScore.getOrDefault(current, Double.POSITIVE_INFINITY) + manhattanDistance(current, neighbor);
 
                 if (score >= gScore.getOrDefault(neighbor, Double.POSITIVE_INFINITY))
