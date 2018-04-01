@@ -6,9 +6,11 @@ import aiproject.agent.CompetitiveAgent;
 import aiproject.game.*;
 import aiproject.utility.GameStatistics;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 
 import javax.swing.*;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -82,6 +84,16 @@ public class Application {
         }
 
         printer.close();
+
+        BufferedReader br = Files.newBufferedReader(Paths.get("./G10_1.csv"));
+        CSVParser parser = new CSVParser(br, CSVFormat.DEFAULT);
+
+        BufferedWriter bw2 = Files.newBufferedWriter(Paths.get("./G10_2.csv"));
+        CSVPrinter p2 = new CSVPrinter(bw2, CSVFormat.DEFAULT);
+
+        GameStatistics.evalHappinessCompetitiveness(parser, p2);
+
+        p2.close();
     }
 
     public static void display(Scenario scenario) throws InterruptedException {
