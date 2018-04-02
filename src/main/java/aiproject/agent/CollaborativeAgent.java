@@ -86,10 +86,8 @@ public class CollaborativeAgent extends AbstractAgent {
         }
 
         if (move == Move.NO_MOVE) {
-            if (pointList.contains(target))
-                pointList.removeFirst();
-            if (ourTargets.contains(target))
-                ourTargets.remove(target);
+            pointList.remove(target);
+            ourTargets.remove(target);
             target = null;
         }
 
