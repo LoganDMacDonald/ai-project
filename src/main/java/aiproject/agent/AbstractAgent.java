@@ -50,15 +50,18 @@ public abstract class AbstractAgent extends Agent {
      * @param target The target position in the game space
      * @return The next move towards the target
      */
-    protected Move navigate(AgentContext ctx, Point target) {
-        if (target == null || ctx.getX() == target.x && ctx.getY() == target.y) {
+    protected Move navigate(AgentContext ctx, Point target, Point... avoid) {
+        if (target == null || ctx == null || ctx.getX() == target.x && ctx.getY() == target.y) {
             this.target = null;
             return Move.NO_MOVE;
         }
-        if (this.target == null || !this.target.equals(target)) {
+        if (this.target == null || !this.target.equals(target) || avoid.length > 0) {
             this.target = target;
             path.clear();
-            path.addAll(aStar(new Point(ctx.getX(), ctx.getY()), target));
+            LinkedList<Point> points = aStar(new Point(ctx.getX(), ctx.getY()), target, avoid);
+            if (points == null)
+                return null;
+            path.addAll(points);
         }
 
         if (path.isEmpty()) {
@@ -125,7 +128,7 @@ public abstract class AbstractAgent extends Agent {
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
 
-    private LinkedList<Point> aStar(Point start, Point goal) {
+    private LinkedList<Point> aStar(Point start, Point goal, Point... avoid) {
         HashSet<Point> closedSet = new HashSet<>();
         HashSet<Point> openSet = new HashSet<>();
         openSet.add(start);
@@ -160,7 +163,7 @@ public abstract class AbstractAgent extends Agent {
             openSet.remove(current);
             closedSet.add(current);
 
-            for (Point neighbor : getNeighbors(current)) {
+            for (Point neighbor : getNeighbors(current, avoid)) {
                 if (closedSet.contains(neighbor))
                     continue;
                 openSet.add(neighbor);
@@ -188,12 +191,14 @@ public abstract class AbstractAgent extends Agent {
         return path;
     }
 
-    private List<Point> getNeighbors(Point point) {
+    private List<Point> getNeighbors(Point point, Point... avoid) {
         LinkedList<Point> linkedList = new LinkedList<>();
         List<Point> possibleNeighbors = Arrays.asList(new Point(point.x - 1, point.y), new Point(point.x + 1, point.y),
                 new Point(point.x, point.y - 1), new Point(point.x, point.y + 1));
         for (Point pt : possibleNeighbors) {
             if (pt.x < 0 || pt.y < 0 || pt.getX() >= getGameWidth() || pt.getY() >= getGameHeight())
+                continue;
+            if (Arrays.asList(avoid).contains(pt))
                 continue;
             linkedList.add(pt);
         }

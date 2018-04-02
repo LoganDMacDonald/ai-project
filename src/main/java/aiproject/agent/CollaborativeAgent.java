@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 public class CollaborativeAgent extends AbstractAgent {
 
@@ -70,7 +71,19 @@ public class CollaborativeAgent extends AbstractAgent {
             }
         }
 
-        Move move = navigate(ctx, target);
+        List<Entity> nearby = ctx.getNearbyAgents();
+        Point[] agents = new Point[nearby.size()];
+        for (int i = 0; i < agents.length; i++) {
+            Entity ent = nearby.get(i);
+            agents[i] = new Point(ent.getX(), ent.getY());
+        }
+
+        Move move = navigate(ctx, target, agents);
+
+        if (move == null) {
+            target = null;
+            return Move.NO_MOVE;
+        }
 
         if (move == Move.NO_MOVE) {
             if (pointList.contains(target))
