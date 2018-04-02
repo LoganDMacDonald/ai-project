@@ -53,6 +53,12 @@ public class CollaborativeAgent extends AbstractAgent {
             target = getClosestTarget(ctx);
         }
 
+        for (Entity entity : ctx.getNearbyAgents()) {
+            if (ctx.getX() == entity.getX() && ctx.getY() == entity.getY()) {
+                System.err.println("Collision: " + ctx.getX() + ", " + ctx.getY());
+            }
+        }
+
         Point us = new Point(ctx.getX(), ctx.getY());
         if (target == null && !pointList.isEmpty()) {
             pointList.sort(Comparator.comparingDouble(a -> a.distance(us)));
